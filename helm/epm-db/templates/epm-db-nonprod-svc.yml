@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: epm-db-nonprod-svc
+  labels:
+# This matches the app in the rc, not the rc
+    app: epm-db-nonprod
+spec:
+  type: NodePort
+# types are 
+# ClusterIP for a stable internal cluster ip
+# NodePort for exposing the the port outside the cluster, on top of stable internal ip
+# LoadBalancer integrates NodePort with cloud-based load balancer
+  ports:
+  - port: 7474
+    nodePort: 30474
+    protocol: TCP
+    name: remote
+  - port: 7687
+    nodePort: 30687
+    protocol: TCP
+    name: bolt
+  selector:
+    app: epm-db-nonprod

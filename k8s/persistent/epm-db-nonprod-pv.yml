@@ -1,0 +1,33 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: epm-db-pv-volume
+  labels:
+    type: local
+    vname: epm-db-pv-volume
+    env: nonprod
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/epmdb-neo4j"
+    type: DirectoryOrCreate
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: epm-db-pv-claim
+spec:
+  storageClassName: standard
+  selector:
+    matchLabels:
+      vname: epm-db-pv-volume
+      env: nonprod
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

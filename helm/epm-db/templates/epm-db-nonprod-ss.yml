@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: epm-db-nonprod-ss
+spec:
+  selector:
+    matchLabels:
+      app: epm-db-nonprod
+  serviceName: epm-db-nonprod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: epm-db-nonprod
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: epm-db-nonprod
+        image: neo4j
+        volumeMounts: 
+        - name: epm-db-volume
+          mountPath: /data
+        ports:
+        - containerPort: 7474
+          name: remote
+        - containerPort: 7687
+          name: bolt
+      volumes:
+      - name: epm-db-volume
+        persistentVolumeClaim:
+          claimName: epm-db-pv-claim
